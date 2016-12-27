@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"$if(lang)$ lang="$lang$" xml:lang="$lang$"$endif$>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+$for(author-meta)$
+  <meta name="author" content="$author-meta$" />
+$endfor$
+$if(date-meta)$
+  <meta name="date" content="$date-meta$" />
+$endif$
+  <title>$if(title-prefix)$$title-prefix$ - $endif$$pagetitle$</title>
+  <style type="text/css">code{white-space: pre;}</style>
+$if(quotes)$
+  <style type="text/css">q { quotes: "“" "”" "‘" "’"; }</style>
+$endif$
+$if(highlighting-css)$
+  <style type="text/css">
+$highlighting-css$
+  </style>
+$endif$
+$for(css)$
+  <link rel="stylesheet" href="$css$" $if(html5)$$else$type="text/css" $endif$/>
+$endfor$
+$if(math)$
+  $math$
+$endif$
+$for(header-includes)$
+  $header-includes$
+$endfor$
+</head>
+<body>
+$for(include-before)$
+$include-before$
+$endfor$
+$if(title)$
+<div id="$idprefix$header">
+<h1 class="title">$title$</h1>
+$if(subtitle)$
+<h1 class="subtitle">$subtitle$</h1>
+$endif$
+$for(author)$
+<h2 class="author">$author$</h2>
+$endfor$
+$if(date)$
+<h3 class="date">$date$</h3>
+$endif$
+</div>
+$endif$
+$if(toc)$
+<div id="TOC">
+<p>Table of Contents</p>
+<div id="$idprefix$TOC_CONTENT">
+$toc$
+</div>
+</div>
+$endif$
+<div id="$idprefix$main">
+$body$
+</div>
+$for(include-after)$
+$include-after$
+$endfor$
+</body>
+<script type="text/javascript">
+var $$ = function (selector) {
+    var cl, id, alls, arrEle = [];
+    if (/^\./.test(selector)) {
+        cl = selector.replace(".", "");
+        alls = document.getElementsByTagName("*"), l = alls.length;
+        for (var i=0; i<l; i+=1) {
+            var name = alls[i].className, arrName = [];
+            if (name) {
+                arrName = name.split(" "), lName = arrName.length;
+                for (var j=0; j<lName; j+=1) {
+                    if (arrName[j] === cl) {
+                        arrEle.push(alls[i]);
+                    }
+                }
+            }
+        }
+    } else if (/^#/.test(selector)) {
+        id = selector.replace("#", "");
+        var o = document.getElementById(id);
+        if (o) {
+            arrEle.push(o);
+        }
+    }
+    return arrEle;
+};
+Array.prototype.click = function(fn) {
+    var l = this.length;
+    if (l) {
+        for (var i=0; i<l; i+=1) {
+            this[i].onclick = function() {
+                fn.call(this);
+            };
+        }
+    }
+};
+$$(".acco_title").click(function() {
+    var rel = this.lang, cl = this.className;
+    if (!/on/.test(cl) && rel) {
+        $$("#" + rel)[0].style.height = "100%";
+        this.className = "acco_title acco_title_on";
+    }
+
+    if (/on/.test(cl) && rel) {
+        $$("#" + rel)[0].style.height = "0";
+        this.className = "acco_title";
+    }
+});
+
+function openheader(obj) {
+    var name = obj? obj.innerHTML: undefined;
+    if (name) {
+        name = name.substring(name.indexOf("</span>") + 8, name.length);
+        name = name.toLowerCase();
+    } else {
+        console.log("name is null");
+        return;
+    }
+
+    var target = document.getElementById(name);
+    if (target) {
+        var tag = target.tagName.toLowerCase();
+        if (tag.indexOf("h3") >= 0) {
+            target = target.parentNode.previousSibling;
+        } else {
+            target = target.parentNode;
+        }
+
+        if (target && target.className && target.className.indexOf("acco_title") >= 0) {
+            target.click();
+        }
+
+        target = target.parentNode.previousSibling;
+        if (target && target.className && target.className.indexOf("acco_title") >= 0) {
+            target.click();
+        }
+    }
+}
+
+var links = document.getElementsByTagName("a");
+for (var i = 0; i < links.length; i++) {
+    links[i].onclick = function(){ openheader(this) };
+}
+
+</script>
+</html>
