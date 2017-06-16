@@ -2,15 +2,16 @@
 
 P=`dirname $(readlink -f $0)`
 
-# dependence
+# Dependences
 {
 sudo apt-get install libc6 libffi6 libgmp10 libicu52 liblua5.1-0 libpcre3 libyaml-0-2 zlib1g pandoc pandoc-data
 
-# support convert to PDF via wkhtmltopdf
-# http://wkhtmltopdf.org/ (the newest wkhtmltopdf with patched qt (wkhtmltox) is recommended)
+# Support converting to PDF via
+# wkhtmltopdf (the newest wkhtmltopdf with patched qt (wkhtmltox) is recommended)
+#   Refer to http://wkhtmltopdf.org/ for newest version.
 sudo apt-get install wkhtmltopdf
-# or LaTeX (included in TeX Live, which has very big, big size...)
-#sudo apt-get install texlive
+# or LaTeX (included in TeX Live, which has very big, big size...) and xelatex (symlink of xetex)
+#sudo apt-get install texlive texlive-xetex
 } || {
 echo ">>> Install dependent packages failed!"
 exit

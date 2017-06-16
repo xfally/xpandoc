@@ -134,7 +134,7 @@ for arg in "$@"; do
 
 	# slide show doesn't need convert to pdf
 	if [[ ! $SLIDE_SHOW == 1 ]]; then
-		if [[ -f /usr/bin/wkhtmltopdf ]]; then
+		if [[ -f /usr/bin/wkhtmltopdf || /usr/local/bin/wkhtmltopdf ]]; then
 			# convert to pdf (via wkhtmltopdf or wkhtmltox if installed)
 			# cmd: wkhtmltopdf xxx.html xxx.pdf
 			echo "wkhtmltopdf --page-size A4 -T 15 -R 15 -B 15 -L 15 "$name".html "$name".pdf" | tee /tmp/xpandoc.cmd && sh < /tmp/xpandoc.cmd
@@ -149,10 +149,10 @@ for arg in "$@"; do
 			echo ""
 		else
 			#echo "*** dependence: wkhtmltopdf not installed!"
-			if [[ -f /usr/bin/latex ]]; then
+			if [[ -f /usr/bin/latex && -f /usr/bin/xelatex ]]; then
 				# convert to pdf (via LaTeX if installed)
 				# cmd: pandoc xxx -t latex -o xxx.pdf
-				echo "pandoc -t latex "$name".html -o "$name".pdf" | tee /tmp/xpandoc.cmd && sh < /tmp/xpandoc.cmd
+				echo "pandoc -t latex --latex-engine=xelatex -V mainfont=WenQuanYi\ Micro\ Hei\ Mono -V papersize=A4 -V geometry:margin=1.5cm "$name".html -o "$name".pdf" | tee /tmp/xpandoc.cmd && sh < /tmp/xpandoc.cmd
 
 				rm -f /tmp/xpandoc.cmd
 				if [ "$?" == 0 ]; then
