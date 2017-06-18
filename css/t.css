@@ -11,6 +11,13 @@ body > *:first-child {
 body > *:last-child {
    margin-bottom: 0 !important; }
 
+footer p {
+  padding-left: 4px;
+  font-style: italic;
+  color: #333;
+  background-color: #DDD;
+}
+
 a {
    color: #4183C4; }
 a.absent {
