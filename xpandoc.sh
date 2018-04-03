@@ -134,7 +134,7 @@ for arg in "$@"; do
 
 	# slide show doesn't need convert to pdf
 	if [[ ! $SLIDE_SHOW == 1 ]]; then
-		if [[ -f /usr/bin/wkhtmltopdf || /usr/local/bin/wkhtmltopdf ]]; then
+		if [[ -f /usr/bin/wkhtmltopdf || -f /usr/local/bin/wkhtmltopdf ]]; then
 			# convert to pdf (via wkhtmltopdf or wkhtmltox if installed)
 			# cmd: wkhtmltopdf xxx.html xxx.pdf
 			echo "wkhtmltopdf --page-size A4 -T 15 -R 15 -B 15 -L 15 "$name".html "$name".pdf" | tee /tmp/xpandoc.cmd && sh < /tmp/xpandoc.cmd
