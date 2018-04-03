@@ -23,7 +23,8 @@ EOF
 	exit 1
 }
 
-# custom for TP-LINK release
+ERR=0
+
 CORE_CSS=~/.pandoc/css/t.css
 SIDEBAR_CSS=~/.pandoc/css/t_sidebar.css
 ACCON_CSS=~/.pandoc/css/t_accondion.css
@@ -123,48 +124,49 @@ for arg in "$@"; do
 "$STANDALONE" \
 "$SELF_CONTAINED | tee /tmp/xpandoc.cmd && sh < /tmp/xpandoc.cmd
 
+	ERR=$?
 	rm -f /tmp/xpandoc.cmd
-	if [[ "$?" == 0 ]]; then
-		echo ">>> output: create "$name".html"
+	if [[ $ERR == 0 ]]; then
+		echo ">>> output: "$name".html"
 	else
-		echo ">>> output: create "$name".html failed!"
+		echo ">>> output: failed to create "$name".html!"
 		exit 1
 	fi
 	echo ""
 
 	# slide show doesn't need convert to pdf
 	if [[ ! $SLIDE_SHOW == 1 ]]; then
-		if [[ -f /usr/bin/wkhtmltopdf || -f /usr/local/bin/wkhtmltopdf ]]; then
+		if command -v wkhtmltopdf > /dev/null 2>&1; then
 			# convert to pdf (via wkhtmltopdf or wkhtmltox if installed)
 			# cmd: wkhtmltopdf xxx.html xxx.pdf
 			echo "wkhtmltopdf --page-size A4 -T 15 -R 15 -B 15 -L 15 "$name".html "$name".pdf" | tee /tmp/xpandoc.cmd && sh < /tmp/xpandoc.cmd
 
+			ERR=$?
 			rm -f /tmp/xpandoc.cmd
-			if [ "$?" == 0 ]; then
-				echo ">>> output: create "$name".pdf"
+			if [ $ERR == 0 ]; then
+				echo ">>> output: "$name".pdf"
 			else
-				echo ">>> output: create "$name".pdf failed!"
+				echo ">>> output: failed to create "$name".pdf!"
 				exit 1
 			fi
 			echo ""
 		else
-			#echo "*** dependence: wkhtmltopdf not installed!"
-			if [[ -f /usr/bin/latex && -f /usr/bin/xelatex ]]; then
+			if command -v latex > /dev/null 2>&1 && command -v /usr/bin/xelatex > /dev/null 2>&1; then
 				# convert to pdf (via LaTeX if installed)
 				# cmd: pandoc xxx -t latex -o xxx.pdf
 				echo "pandoc -t latex --latex-engine=xelatex -V mainfont=WenQuanYi\ Micro\ Hei\ Mono -V papersize=A4 -V geometry:margin=1.5cm "$name".html -o "$name".pdf" | tee /tmp/xpandoc.cmd && sh < /tmp/xpandoc.cmd
 
+				ERR=$?
 				rm -f /tmp/xpandoc.cmd
-				if [ "$?" == 0 ]; then
-					echo ">>> output: create "$name".pdf"
+				if [ $ERR == 0 ]; then
+					echo ">>> output: "$name".pdf"
 				else
-					echo ">>> output: create "$name".pdf failed!"
+					echo ">>> output: failed to create "$name".pdf!"
 					exit 1
 				fi
 				echo ""
 			else
-				#echo "*** dependence: latex not installed!"
-				echo "*** dependence: install wkhtmltopdf or latex to support convert to PDF."
+				echo "*** dependence error: install wkhtmltopdf or latex to support convert to PDF."
 			fi
 		fi
 	fi
