@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# powerful pandoc markdown converter (markdown ==> html, pdf)
+# Powerful pandoc markdown converter (markdown ==> html, pdf)
 #
 # Author: OuyangXY <hh123okbb@gmail.com>
 #         pax <coolwinding@gmail.com>
@@ -104,11 +104,11 @@ shift $(( $OPTIND - 1 ))
 
 for arg in "$@"; do
 	echo "### converting "$arg""
-	echo ""
 	name=${arg%.*}
 
 	# convert to html
 	# cmd: pandoc xxx -t html -o xxx.html
+	echo ""
 	echo "pandoc \
 -f markdown+ignore_line_breaks \
 -t "$TO" \
@@ -123,6 +123,7 @@ for arg in "$@"; do
 "$HIGHLIGHT_STYLE" \
 "$STANDALONE" \
 "$SELF_CONTAINED | tee /tmp/xpandoc.cmd && sh < /tmp/xpandoc.cmd
+	echo ""
 
 	ERR=$?
 	rm -f /tmp/xpandoc.cmd
@@ -132,14 +133,15 @@ for arg in "$@"; do
 		echo ">>> output: failed to create "$name".html!"
 		exit 1
 	fi
-	echo ""
 
 	# slide show doesn't need convert to pdf
 	if [[ ! $SLIDE_SHOW == 1 ]]; then
 		if command -v wkhtmltopdf > /dev/null 2>&1; then
 			# convert to pdf (via wkhtmltopdf or wkhtmltox if installed)
 			# cmd: wkhtmltopdf xxx.html xxx.pdf
+			echo ""
 			echo "wkhtmltopdf --page-size A4 -T 15 -R 15 -B 15 -L 15 "$name".html "$name".pdf" | tee /tmp/xpandoc.cmd && sh < /tmp/xpandoc.cmd
+			echo ""
 
 			ERR=$?
 			rm -f /tmp/xpandoc.cmd
@@ -149,12 +151,13 @@ for arg in "$@"; do
 				echo ">>> output: failed to create "$name".pdf!"
 				exit 1
 			fi
-			echo ""
 		else
 			if command -v latex > /dev/null 2>&1 && command -v /usr/bin/xelatex > /dev/null 2>&1; then
 				# convert to pdf (via LaTeX if installed)
 				# cmd: pandoc xxx -t latex -o xxx.pdf
+				echo ""
 				echo "pandoc -t latex --latex-engine=xelatex -V mainfont=WenQuanYi\ Micro\ Hei\ Mono -V papersize=A4 -V geometry:margin=1.5cm "$name".html -o "$name".pdf" | tee /tmp/xpandoc.cmd && sh < /tmp/xpandoc.cmd
+				echo ""
 
 				ERR=$?
 				rm -f /tmp/xpandoc.cmd
@@ -164,7 +167,6 @@ for arg in "$@"; do
 					echo ">>> output: failed to create "$name".pdf!"
 					exit 1
 				fi
-				echo ""
 			else
 				echo "*** dependence error: install wkhtmltopdf or latex to support convert to PDF."
 			fi
